@@ -1,0 +1,50 @@
+name: Update DVM Formula
+on:
+  repository_dispatch:
+    types:
+      - update-dvm
+
+env:
+  VERSION: ${{ github.event.client_payload.version }}
+  SHA256_MACOS_X64: ${{ github.event.client_payload.sha256_macos_x64 }}
+  SHA256_MACOS_ARM64: ${{ github.event.client_payload.sha256_macos_arm64 }}
+  SHA256_LINUX_X64: ${{ github.event.client_payload.sha256_linux_x64 }}
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Update Formula
+        shell: bash
+        run: |
+          sed \
+          -e 's/{{ version }}/${{ env.VERSION }}/g' \
+          -e 's/{{ sha256_macos_x64 }}/${{ env.SHA256_MACOS_X64 }}/g' \
+          -e 's/{{ sha256_macos_arm64 }}/${{ env.SHA256_MACOS_ARM64 }}/g' \
+          -e 's/{{ sha256_linux_x64 }}/${{ env.SHA256_LINUX_X64 }}/g' \
+          dvm_template.rb > Formula/dvm.rb
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "feat: Update the DVM version to ${{ env.VERSION }}"
+          branch: update-dvm
+          delete-branch: true
+          title: "Update the DVM version to ${{ env.VERSION }}"
+      - name: Auto Approve
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        run: gh pr review --approve "${{ steps.cpr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
