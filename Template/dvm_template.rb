@@ -4,7 +4,7 @@ class Dvm < Formula
   homepage "https://github.com/blendfactory/dvm"
   license "BSD-3-Clause"
 
-  on_macos do
+  if OS.mac?
     if Hardware::CPU.arm?
       url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-macos-arm64.tar.gz"
       sha256 "{{ sha256_macos_arm64 }}"
@@ -12,9 +12,7 @@ class Dvm < Formula
       url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-macos-x64.tar.gz"
       sha256 "{{ sha256_macos_x64 }}"
     end
-  end
-
-  on_linux do
+  elsif OS.linux?
     url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-linux-x64.tar.gz"
     sha256 "{{ sha256_linux_x64 }}"
   end
