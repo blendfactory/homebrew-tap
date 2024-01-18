@@ -29,7 +29,7 @@ jobs:
           -e 's/{{ sha256_macos_x64 }}/${{ env.SHA256_MACOS_X64 }}/g' \
           -e 's/{{ sha256_macos_arm64 }}/${{ env.SHA256_MACOS_ARM64 }}/g' \
           -e 's/{{ sha256_linux_x64 }}/${{ env.SHA256_LINUX_X64 }}/g' \
-          Template/dvm_template.rb > Formula/dvm.rb
+          Template/dvm.template > Formula/dvm.rb
       - name: Generate a token for pr-creator
         id: app-token-pr-creator
         uses: actions/create-github-app-token@v1
