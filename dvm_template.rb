@@ -2,6 +2,7 @@ class Dvm < Formula
   version "{{ version }}"
   desc "Dart Version Management: A simple CLI to manage Dart SDK versions per project."
   homepage "https://github.com/blendfactory/dvm"
+  license "BSD-3-Clause"
   
   on_macos do
     if Hardware::CPU.arm?
