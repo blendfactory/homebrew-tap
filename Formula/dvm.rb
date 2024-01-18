@@ -3,7 +3,7 @@ class Dvm < Formula
   version "0.0.1"
   homepage "https://github.com/blendfactory/dvm"
   license "BSD-3-Clause"
-  
+
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-macos-arm64.tar.gz"
