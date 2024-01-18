@@ -20,7 +20,18 @@ class Dvm < Formula
   end
 
   def install
-    bin.install "dvm"
+    # Tell the pub server where these installations are coming from.
+    ENV["PUB_ENVIRONMENT"] = "homebrew:fvm"
+
+    lib.install "src/dvm.snapshot"
+    lib.install "src/dart"
+
+    (bin/"dvm").write <<~SH
+      #!/bin/sh
+      exec "#{lib}/dart" "#{lib}/dvm.snapshot" "$@"
+    SH
+
+    chmod 0555, "#{bin}/dvm"
   end
 
   test do
