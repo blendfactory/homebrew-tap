@@ -29,10 +29,17 @@ jobs:
           -e 's/{{ sha256_macos_arm64 }}/${{ env.SHA256_MACOS_ARM64 }}/g' \
           -e 's/{{ sha256_linux_x64 }}/${{ env.SHA256_LINUX_X64 }}/g' \
           dvm_template.rb > Formula/dvm.rb
+      - name: Generate a token for pr-creator
+        id: app-token-pr-creator
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID_BLENDFACTORY_PR_CREATOR }}
+          private-key: ${{ secrets.PRIVATE_KEY_BLENDFACTORY_PR_CREATOR }}
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
+          token: ${{ steps.app-token-pr-creator.outputs.token }}
           commit-message: "feat: Update the DVM version to ${{ env.VERSION }}"
           branch: update-dvm
           delete-branch: true
@@ -42,9 +49,16 @@ jobs:
         run: gh pr review --approve "${{ steps.cpr.outputs.pull-request-number }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate a token for pr-auto-merge-enabler
+        id: app-token-pr-auto-merge-enabler
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID_BLENDFACTORY_PR_AUTO_MERGE_ENABLER }}
+          private-key: ${{ secrets.PRIVATE_KEY_BLENDFACTORY_PR_AUTO_MERGE_ENABLER }}
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
+          token: ${{ steps.app-token-pr-auto-merge-enabler.outputs.token }}
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           merge-method: squash
