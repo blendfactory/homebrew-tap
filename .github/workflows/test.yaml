@@ -1,0 +1,46 @@
+name: Test
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "Formula/**.rb"
+      - ".github/workflows/test.yaml"
+  pull_request:
+    paths:
+      - "Formula/**.rb"
+      - ".github/workflows/test.yaml"
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - macos-latest-xlarge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Cache Homebrew Bundler RubyGems
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-rubygems-
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
+      - name: Only run the pre-cleanup step
+        run: brew test-bot --only-cleanup-before
+      - name: Only run the local system setup check step
+        run: brew test-bot --only-setup
+      - name: Only run the tap syntax check step
+        run: brew test-bot --only-tap-syntax
+      - name: Only run the formulae steps
+        if: github.event_name == 'pull_request'
+        run: brew test-bot --only-formulae
