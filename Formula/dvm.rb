@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dvm < Formula
   desc "Dart Version Management: A simple CLI to manage Dart SDK versions per project"
   version "0.0.1"
