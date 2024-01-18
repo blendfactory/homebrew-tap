@@ -22,6 +22,6 @@ class Dvm < Formula
   end
 
   test do
-    assert_equal "#{version}", shell_output("#{bin}/dvm --version").strip
+    assert_equal version.to_s, shell_output("#{bin}/dvm --version").strip
   end
 end
