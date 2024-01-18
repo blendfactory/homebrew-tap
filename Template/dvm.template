@@ -21,7 +21,7 @@ class Dvm < Formula
 
   def install
     # Tell the pub server where these installations are coming from.
-    ENV["PUB_ENVIRONMENT"] = "homebrew:fvm"
+    ENV["PUB_ENVIRONMENT"] = "homebrew:dvm"
 
     lib.install "src/dvm.snapshot"
     lib.install "src/dart"
