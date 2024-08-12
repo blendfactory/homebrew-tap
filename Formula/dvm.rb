@@ -3,20 +3,20 @@
 class Dvm < Formula
   desc "Dart Version Management: A simple CLI to manage Dart SDK versions per project"
   homepage "https://github.com/blendfactory/dvm"
-  version "0.0.7"
+  version "0.0.8"
   license "BSD-3-Clause"
 
   if OS.mac?
     if Hardware::CPU.arm?
       url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-macos-arm64.tar.gz"
-      sha256 "8856b125f3f3be40cdc81d941a821e901456cf07dca378a38d04c211e26d066c"
+      sha256 "8416b9695b05e861d5052f7b10bd3c86bf9ed01f92982671a4a101233b8dfce3"
     else
       url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-macos-x64.tar.gz"
-      sha256 "e00b182a972de9553f65ba129a547e9bba86058bd0d231a19d86a7a8f0728fb9"
+      sha256 "541e831135475b3956a42302604a41ab0ee57616deda6fc9a57c30623bf07df5"
     end
   elsif OS.linux?
     url "https://github.com/blendfactory/dvm/releases/download/#{version}/dvm-#{version}-linux-x64.tar.gz"
-    sha256 "db1f78bd2099a8de6f93a95eb9d7bb949f6aef8bcef994db8eec1167888065d8"
+    sha256 "6a5d62ebdc9f07d81242fbd79533605afc009211e719883d324968e34975acee"
   end
 
   def install
